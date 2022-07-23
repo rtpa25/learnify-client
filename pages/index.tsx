@@ -17,6 +17,7 @@ import { User } from '../interfaces/user.interface';
 import { useAppDispatch } from '../hooks/redux';
 import { setCurrentUserData } from '../store/slices/currentUser.slice';
 import axios from 'axios';
+import axiosInstance from '../utils/axiosInterceptor';
 
 const Home: NextPage = () => {
   const [showModal, setShowModal] = useState(false);
@@ -36,11 +37,8 @@ const Home: NextPage = () => {
     async function getUserInfo() {
       if (await doesSessionExist()) {
         const supertokensId = await getUserId();
-        const { data } = await axios.get<User>(
-          `http://localhost:8080/users/me?supertokensId=${supertokensId}`,
-          {
-            withCredentials: true,
-          }
+        const { data } = await axiosInstance.get<User>(
+          `/users/me?supertokensId=${supertokensId}`
         );
         dispatch(setCurrentUserData({ user: data }));
       }

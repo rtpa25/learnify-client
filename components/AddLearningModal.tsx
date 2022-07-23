@@ -1,7 +1,9 @@
 import { Close } from '@material-ui/icons';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import { FC, useState } from 'react';
 import { useAppSelector } from '../hooks/redux';
+import { Learning } from '../interfaces/learning.interface';
 import axiosInstance from '../utils/axiosInterceptor';
 import {
   extractPlaylistId,
@@ -23,6 +25,7 @@ interface LearningData {
   channelTitle: string;
   thumbnail: string;
   user: string;
+  playlistId: string;
 }
 
 const AddGroupModal: FC<AddGroupModalProps> = ({ show, onClose }) => {
@@ -30,6 +33,7 @@ const AddGroupModal: FC<AddGroupModalProps> = ({ show, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const user = useAppSelector((state) => state.currentUser.user);
+  const router = useRouter();
 
   const modalCloseHandler = (e: any) => {
     e.preventDefault();
@@ -55,10 +59,12 @@ const AddGroupModal: FC<AddGroupModalProps> = ({ show, onClose }) => {
         channelTitle,
         thumbnail: thumbnails.high.url,
         user: user!._id,
+        playlistId: playListId,
       };
-      await axiosInstance.post('/learnings', learningPostBody);
+      await axiosInstance.post<Learning>('/learnings', learningPostBody);
       setPlayListLink('');
       onClose();
+      router.push(`/learning/${playListId}`);
     } catch (error: any) {
       console.error(error);
       setError(error.message);
