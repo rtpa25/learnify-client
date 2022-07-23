@@ -1,5 +1,14 @@
 import { Close } from '@material-ui/icons';
-import { FC } from 'react';
+import axios from 'axios';
+import { FC, useState } from 'react';
+import { useAppSelector } from '../hooks/redux';
+import axiosInstance from '../utils/axiosInterceptor';
+import {
+  extractPlaylistId,
+  isValidPlayListUrl,
+} from '../utils/isValidYouTubePlaylistLink';
+import ErrorSpan from './UI/ErrorSpan';
+import LoadingSpinner from './UI/LoadingSpinner';
 import MainHeader from './UI/MainHeader';
 import Modal from './UI/Modal';
 
@@ -8,10 +17,53 @@ interface AddGroupModalProps {
   onClose: () => void;
 }
 
+interface LearningData {
+  name: string;
+  channelId: string;
+  channelTitle: string;
+  thumbnail: string;
+  user: string;
+}
+
 const AddGroupModal: FC<AddGroupModalProps> = ({ show, onClose }) => {
+  const [playListLink, setPlayListLink] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const user = useAppSelector((state) => state.currentUser.user);
+
   const modalCloseHandler = (e: any) => {
     e.preventDefault();
     onClose();
+  };
+
+  const createLearningHandler = async () => {
+    if (!isValidPlayListUrl(playListLink)) {
+      alert('please enter a valid youtube playlist url');
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const playListId = extractPlaylistId(playListLink);
+      const res = await axios.get(`
+        ${process.env.NEXT_PUBLIC_YT_ENDPOINT}/playlists?key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}&part=snippet&id=${playListId}
+      `);
+      const { title, channelId, channelTitle, thumbnails } =
+        res.data.items[0].snippet;
+      const learningPostBody: LearningData = {
+        name: title,
+        channelId,
+        channelTitle,
+        thumbnail: thumbnails.high.url,
+        user: user!._id,
+      };
+      await axiosInstance.post('/learnings', learningPostBody);
+      setPlayListLink('');
+      onClose();
+    } catch (error: any) {
+      console.error(error);
+      setError(error.message);
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -24,8 +76,7 @@ const AddGroupModal: FC<AddGroupModalProps> = ({ show, onClose }) => {
         <Close
           className='cursor-pointer text-red-600'
           onClick={(e) => {
-            e.preventDefault();
-            onClose();
+            modalCloseHandler(e);
           }}
         />
       </div>
@@ -33,9 +84,16 @@ const AddGroupModal: FC<AddGroupModalProps> = ({ show, onClose }) => {
       <input
         type='text'
         className='h-8 rounded-md bg-gray-400/50 p-2 my-4 w-full'
+        value={playListLink}
+        onChange={(e) => {
+          setPlayListLink(e.target.value);
+        }}
       />
-      <button className='bg-black text-white w-3/4 p-2 m-4 rounded-md'>
-        Create Learning
+      {error && <ErrorSpan message={error} />}
+      <button
+        className='bg-black text-white w-3/4 p-2 m-4 rounded-md'
+        onClick={createLearningHandler}>
+        {isLoading ? <LoadingSpinner /> : 'Create Learning'}
       </button>
     </Modal>
   );

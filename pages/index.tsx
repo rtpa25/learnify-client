@@ -1,73 +1,67 @@
 import type { NextPage } from 'next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   AddLearningModal,
-  Learning,
   MainHeader,
   NavBar,
+  LearningsContainer,
 } from '../components/zExporter';
 import { Add } from '@material-ui/icons';
+import { ThirdPartyEmailPasswordAuth } from 'supertokens-auth-react/recipe/thirdpartyemailpassword';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
+import {
+  doesSessionExist,
+  getUserId,
+} from 'supertokens-auth-react/recipe/session';
+import { User } from '../interfaces/user.interface';
+import { useAppDispatch } from '../hooks/redux';
+import { setCurrentUserData } from '../store/slices/currentUser.slice';
+import axios from 'axios';
 
 const Home: NextPage = () => {
   const [showModal, setShowModal] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const closeModalHandler = () => {
+    setShowModal(false);
+    enableBodyScroll(document.querySelector('#modal-root')!);
+  };
+
+  const openModalHandler = () => {
+    setShowModal(true);
+    disableBodyScroll(document.querySelector('#modal-root')!);
+  };
+
+  useEffect(() => {
+    async function getUserInfo() {
+      if (await doesSessionExist()) {
+        const supertokensId = await getUserId();
+        const { data } = await axios.get<User>(
+          `http://localhost:8080/users/me?supertokensId=${supertokensId}`,
+          {
+            withCredentials: true,
+          }
+        );
+        dispatch(setCurrentUserData({ user: data }));
+      }
+    }
+    getUserInfo();
+  }, []);
 
   return (
-    <div>
+    <ThirdPartyEmailPasswordAuth>
       <NavBar />
       <div className='py-4 px-8'>
         <MainHeader heading={'My Learnings'} />
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-8 my-4'>
-          <Learning
-            thumbnailUrl={
-              'https://www.freecodecamp.org/news/content/images/2021/07/reactcourse.png'
-            }
-            thumbnailAltText={'react-course'}
-            courseName={'ReactJS the complete developers guide'}
-            courseCreator={'freecodecamp'}
-          />
-          <Learning
-            thumbnailUrl={
-              'https://www.freecodecamp.org/news/content/images/2021/07/reactcourse.png'
-            }
-            thumbnailAltText={'react-course'}
-            courseName={'ReactJS the complete developers guide'}
-            courseCreator={'freecodecamp'}
-          />
-          <Learning
-            thumbnailUrl={
-              'https://www.freecodecamp.org/news/content/images/2021/07/reactcourse.png'
-            }
-            thumbnailAltText={'react-course'}
-            courseName={'ReactJS the complete developers guide'}
-            courseCreator={'freecodecamp'}
-          />
-          <Learning
-            thumbnailUrl={
-              'https://www.freecodecamp.org/news/content/images/2021/07/reactcourse.png'
-            }
-            thumbnailAltText={'react-course'}
-            courseName={'ReactJS the complete developers guide'}
-            courseCreator={'freecodecamp'}
-          />
-          <Learning
-            thumbnailUrl={
-              'https://www.freecodecamp.org/news/content/images/2021/07/reactcourse.png'
-            }
-            thumbnailAltText={'react-course'}
-            courseName={'ReactJS the complete developers guide'}
-            courseCreator={'freecodecamp'}
-          />
-        </div>
+        <LearningsContainer />
       </div>
-      <AddLearningModal show={showModal} onClose={() => setShowModal(false)} />
+      <AddLearningModal show={showModal} onClose={closeModalHandler} />
       <button
         className='fixed bottom-0 right-0 p-4 mx-12 my-8 bg-rose-600 text-white rounded-full duration-150 hover:bg-rose-800 shadow-xl'
-        onClick={() => {
-          setShowModal(true);
-        }}>
+        onClick={openModalHandler}>
         <Add />
       </button>
-    </div>
+    </ThirdPartyEmailPasswordAuth>
   );
 };
 
