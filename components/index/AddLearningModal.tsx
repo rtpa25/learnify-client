@@ -2,18 +2,18 @@ import { Close } from '@material-ui/icons';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { FC, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../hooks/redux';
-import { Learning } from '../interfaces/learning.interface';
-import { setCurrentLearningData } from '../store/slices/currentLearning.slice';
-import axiosInstance from '../utils/axiosInterceptor';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { Learning } from '../../interfaces/learning.interface';
+import { setCurrentLearningData } from '../../store/slices/currentLearning.slice';
+import axiosInstance from '../../utils/axiosInterceptor';
 import {
   extractPlaylistId,
   isValidPlayListUrl,
-} from '../utils/isValidYouTubePlaylistLink';
-import ErrorSpan from './UI/ErrorSpan';
-import LoadingSpinner from './UI/LoadingSpinner';
-import MainHeader from './UI/MainHeader';
-import Modal from './UI/Modal';
+} from '../../utils/isValidYouTubePlaylistLink';
+import ErrorSpan from '../UI/ErrorSpan';
+import LoadingSpinner from '../UI/LoadingSpinner';
+import MainHeader from '../UI/MainHeader';
+import Modal from '../UI/Modal';
 
 interface AddGroupModalProps {
   show: boolean;

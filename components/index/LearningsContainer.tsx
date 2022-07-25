@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from 'react';
-import { useAppSelector } from '../hooks/redux';
-import { Learning } from '../interfaces/learning.interface';
-import axiosInstance from '../utils/axiosInterceptor';
+import { useAppSelector } from '../../hooks/redux';
+import { Learning } from '../../interfaces/learning.interface';
+import axiosInstance from '../../utils/axiosInterceptor';
 import LearningElement from './Learning';
-import ErrorSpan from './UI/ErrorSpan';
-import LoadingSpinner from './UI/LoadingSpinner';
+import ErrorSpan from '../UI/ErrorSpan';
+import LoadingSpinner from '../UI/LoadingSpinner';
 
 const LearningsContainer: FC = () => {
   const [learnings, setLearnings] = useState<Learning[]>([]);

@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 import { FC } from 'react';
-import { useAppDispatch } from '../hooks/redux';
-import { Learning } from '../interfaces/learning.interface';
-import { setCurrentLearningData } from '../store/slices/currentLearning.slice';
-import { trimCourseName } from '../utils/trimCourseName';
+import { useAppDispatch } from '../../hooks/redux';
+import { Learning } from '../../interfaces/learning.interface';
+import { setCurrentLearningData } from '../../store/slices/currentLearning.slice';
+import { trimCourseName } from '../../utils/trimCourseName';
 
 interface LearningProps {
   learning: Learning;
