@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
-import YouTube, { YouTubeProps } from 'react-youtube';
 import { Learning } from '../../interfaces/learning.interface';
 import axiosInstance from '../../utils/axiosInterceptor';
 import { useRouter } from 'next/router';
@@ -10,6 +9,11 @@ import {
   Loader,
   ErrorSpan,
   SideBarVideoElement,
+  YouTubePlayer,
+  BottomButtonsCarousel,
+  Description,
+  Notes,
+  Creator,
 } from '../../components/zExporter';
 import { SideBarVideoDetails } from '../../interfaces/sideBarVideoDetails.interface';
 
@@ -21,42 +25,10 @@ const LearningPage: NextPage = () => {
   const [error, setError] = useState('');
   const router = useRouter();
   const learningId = router.query.id as string;
-
-  const onPlayerReady: YouTubeProps['onReady'] = (event) => {
-    event.target.pauseVideo();
-    event.target.seekTo(lastSetTimeStamp);
-  };
-
-  const onEndPlayerHandler: YouTubeProps['onEnd'] = () => {
-    //take the user to the next video
-    const index = videosData.findIndex(
-      (video) => video.videoId === chosenVideoId
-    );
-    if (index === videosData.length - 1) {
-      //if the last video, take the user to the learning page
-      router.push('/');
-    } else {
-      //if not the last video, take the user to the next video
-      learningClickHandler(videosData[index + 1]);
-    }
-    //check the existing check box
-    localStorage.setItem(videosData[index].videoId, 'true');
-  };
-
-  const opts: YouTubeProps['opts'] = {
-    height: '70%',
-    width: '100%',
-    playerVars: {
-      autoplay: 1,
-    },
-  };
-
-  const onStateChangeHandler: YouTubeProps['onStateChange'] = async (event) => {
-    await axiosInstance.patch('/learnings/time', {
-      learningId,
-      lastSeenVideoTimestamp: event.target.getCurrentTime(),
-    });
-  };
+  const [showCourseContent, setShowCourseContent] = useState(true);
+  const [showDescription, setShowDescription] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
+  const [showCreator, setShowCreator] = useState(false);
 
   const learningClickHandler = async (video: SideBarVideoDetails) => {
     try {
@@ -119,27 +91,43 @@ const LearningPage: NextPage = () => {
       return (
         <>
           <NavBar />
-          <div className='w-screen h-screen md:flex'>
-            <YouTube
-              className='h-full w-3/4'
-              videoId={chosenVideoId}
-              opts={opts}
-              onReady={onPlayerReady}
-              loading={'lazy'}
-              onStateChange={onStateChangeHandler}
-              onEnd={onEndPlayerHandler}
-            />
-            <div className='bg-gray-100 h-full w-1/4 overflow-auto'>
-              {videosData.map((video: SideBarVideoDetails) => {
-                return (
-                  <SideBarVideoElement
-                    key={video.videoId}
-                    video={video}
-                    chosenVideoId={chosenVideoId}
-                    learningClickHandler={() => learningClickHandler(video)}
-                  />
-                );
-              })}
+          <div className='w-screen h-screen flex flex-col md:flex-row'>
+            <div className='md:w-3/4 h-full flex flex-col'>
+              <YouTubePlayer
+                lastSetTimeStamp={lastSetTimeStamp}
+                videosData={videosData}
+                chosenVideoId={chosenVideoId}
+                learningId={learningId}
+                learningClickHandler={learningClickHandler}
+              />
+              <BottomButtonsCarousel
+                setShowCourseContent={setShowCourseContent}
+                setShowDescription={setShowDescription}
+                setShowNotes={setShowNotes}
+                setShowCreator={setShowCreator}
+              />
+            </div>
+            <div className='bg-gray-100 h-4/5 md:h-full w-full md:w-1/4 overflow-auto'>
+              {showCourseContent ? (
+                videosData.map((video: SideBarVideoDetails) => {
+                  return (
+                    <SideBarVideoElement
+                      key={video.videoId}
+                      video={video}
+                      chosenVideoId={chosenVideoId}
+                      learningClickHandler={() => learningClickHandler(video)}
+                    />
+                  );
+                })
+              ) : showDescription ? (
+                <Description chosenVideoId={chosenVideoId} />
+              ) : showNotes ? (
+                <Notes />
+              ) : showCreator ? (
+                <Creator />
+              ) : (
+                <div>No content</div>
+              )}
             </div>
           </div>
         </>
