@@ -2,8 +2,9 @@ import { Close } from '@material-ui/icons';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { FC, useState } from 'react';
-import { useAppSelector } from '../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { Learning } from '../interfaces/learning.interface';
+import { setCurrentLearningData } from '../store/slices/currentLearning.slice';
 import axiosInstance from '../utils/axiosInterceptor';
 import {
   extractPlaylistId,
@@ -34,6 +35,7 @@ const AddGroupModal: FC<AddGroupModalProps> = ({ show, onClose }) => {
   const [error, setError] = useState('');
   const user = useAppSelector((state) => state.currentUser.user);
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const modalCloseHandler = (e: any) => {
     e.preventDefault();
@@ -61,10 +63,14 @@ const AddGroupModal: FC<AddGroupModalProps> = ({ show, onClose }) => {
         user: user!._id,
         playlistId: playListId,
       };
-      await axiosInstance.post<Learning>('/learnings', learningPostBody);
+      const { data } = await axiosInstance.post<Learning>(
+        '/learnings',
+        learningPostBody
+      );
       setPlayListLink('');
       onClose();
-      router.push(`/learning/${playListId}`);
+      dispatch(setCurrentLearningData({ learning: data }));
+      router.push(`/learning/${data._id}`);
     } catch (error: any) {
       console.error(error);
       setError(error.message);

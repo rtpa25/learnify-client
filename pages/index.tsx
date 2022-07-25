@@ -16,7 +16,6 @@ import {
 import { User } from '../interfaces/user.interface';
 import { useAppDispatch } from '../hooks/redux';
 import { setCurrentUserData } from '../store/slices/currentUser.slice';
-import axios from 'axios';
 import axiosInstance from '../utils/axiosInterceptor';
 
 const Home: NextPage = () => {

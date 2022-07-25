@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import currentUserReducers from './slices/currentUser.slice';
+import currentLearningReducers from './slices/currentLearning.slice';
 
 export const store = configureStore({
   reducer: {
     currentUser: currentUserReducers,
+    currentLearning: currentLearningReducers,
   },
 });
 

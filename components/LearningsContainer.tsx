@@ -43,16 +43,7 @@ const LearningsContainer: FC = () => {
       return (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-8 my-4'>
           {learnings.map((learning) => {
-            return (
-              <LearningElement
-                key={learning._id}
-                thumbnailUrl={learning.thumbnail}
-                thumbnailAltText={learning.name}
-                courseName={learning.name}
-                courseCreator={learning.channelTitle}
-                playlistId={learning.playlistId}
-              />
-            );
+            return <LearningElement key={learning._id} learning={learning} />;
           })}
         </div>
       );

@@ -19,7 +19,13 @@ const NavBar: FC = () => {
 
   return (
     <div className='flex justify-between bg-rose-600 text-white py-4 px-8 sticky'>
-      <h3 className='text-xl semi'>Learnify</h3>
+      <h3
+        className='text-xl semi cursor-pointer'
+        onClick={() => {
+          window.location.href = '/';
+        }}>
+        Learnify
+      </h3>
       <div className='cursor-pointer' onClick={logoutHandler}>
         {logoutLoading ? <Loader /> : <PowerSettingsNew />}
       </div>
