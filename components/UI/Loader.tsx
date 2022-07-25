@@ -3,7 +3,7 @@ import LoadingSpinner from './LoadingSpinner';
 
 const Loader: FC = () => {
   return (
-    <div className='text-center'>
+    <div className='text-center flex justify-center items-center'>
       <LoadingSpinner />
     </div>
   );

@@ -15,6 +15,7 @@ import { SideBarVideoDetails } from '../../interfaces/sideBarVideoDetails.interf
 
 const LearningPage: NextPage = () => {
   const [chosenVideoId, setChosenVideoId] = useState('');
+  const [lastSetTimeStamp, setLastSetTimeStamp] = useState<number>(0);
   const [videosData, setVideosData] = useState<SideBarVideoDetails[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -23,6 +24,7 @@ const LearningPage: NextPage = () => {
 
   const onPlayerReady: YouTubeProps['onReady'] = (event) => {
     event.target.pauseVideo();
+    event.target.seekTo(lastSetTimeStamp);
   };
 
   const onEndPlayerHandler: YouTubeProps['onEnd'] = () => {
@@ -49,6 +51,13 @@ const LearningPage: NextPage = () => {
     },
   };
 
+  const onStateChangeHandler: YouTubeProps['onStateChange'] = async (event) => {
+    await axiosInstance.patch('/learnings/time', {
+      learningId,
+      lastSeenVideoTimestamp: event.target.getCurrentTime(),
+    });
+  };
+
   const learningClickHandler = async (video: SideBarVideoDetails) => {
     try {
       setChosenVideoId(video.videoId);
@@ -70,6 +79,9 @@ const LearningPage: NextPage = () => {
         const { data } = await axiosInstance.get<Learning>(
           `/learnings/individual?learningId=${learningId}`
         );
+        if (data.lastSeenVideoTimestamp) {
+          setLastSetTimeStamp(data.lastSeenVideoTimestamp);
+        }
 
         const res = await axios.get(`
           ${process.env.NEXT_PUBLIC_YT_ENDPOINT}/playlistItems?key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}&part=snippet&maxResults=100&playlistId=${data.playlistId}
@@ -107,16 +119,14 @@ const LearningPage: NextPage = () => {
       return (
         <>
           <NavBar />
-          <div className='w-screen h-screen flex'>
+          <div className='w-screen h-screen md:flex'>
             <YouTube
               className='h-full w-3/4'
               videoId={chosenVideoId}
               opts={opts}
               onReady={onPlayerReady}
               loading={'lazy'}
-              onStateChange={(e) => {
-                //this place will be used to make the api call to update the time stamp of the last seen video when the user does some action to the player
-              }}
+              onStateChange={onStateChangeHandler}
               onEnd={onEndPlayerHandler}
             />
             <div className='bg-gray-100 h-full w-1/4 overflow-auto'>

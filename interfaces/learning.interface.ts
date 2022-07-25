@@ -9,4 +9,5 @@ export interface Learning {
   user: string;
   playlistId: string;
   lastSeenVideoId?: string;
+  lastSeenVideoTimestamp?: number;
 }

@@ -1,7 +1,11 @@
 import { FC } from 'react';
 
 const ErrorSpan: FC<{ message: string }> = ({ message }) => {
-  return <span className='text-red-500 text-center'>{message}</span>;
+  return (
+    <div className='flex justify-center items-center'>
+      <span className='text-red-500 text-center'>{message}</span>;
+    </div>
+  );
 };
 
 export default ErrorSpan;
