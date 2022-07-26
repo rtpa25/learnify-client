@@ -16,6 +16,7 @@ import {
   Creator,
 } from '../../components/zExporter';
 import { SideBarVideoDetails } from '../../interfaces/sideBarVideoDetails.interface';
+import { ThirdPartyEmailPasswordAuth } from 'supertokens-auth-react/lib/build/recipe/thirdpartyemailpassword';
 
 const LearningPage: NextPage = () => {
   const [chosenVideoId, setChosenVideoId] = useState('');
@@ -28,7 +29,8 @@ const LearningPage: NextPage = () => {
   const [showCourseContent, setShowCourseContent] = useState(true);
   const [showDescription, setShowDescription] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
-  const [showCreator, setShowCreator] = useState(false);
+  // const [showCreator, setShowCreator] = useState(false);
+  const [creatorId, setCreatorId] = useState('');
 
   const learningClickHandler = async (video: SideBarVideoDetails) => {
     try {
@@ -58,6 +60,8 @@ const LearningPage: NextPage = () => {
         const res = await axios.get(`
           ${process.env.NEXT_PUBLIC_YT_ENDPOINT}/playlistItems?key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}&part=snippet&maxResults=100&playlistId=${data.playlistId}
         `);
+
+        setCreatorId(data.channelId);
 
         const fetchedVideosData: SideBarVideoDetails[] = res.data.items.map(
           (item: any) => {
@@ -89,7 +93,7 @@ const LearningPage: NextPage = () => {
       return <ErrorSpan message={error} />;
     } else {
       return (
-        <>
+        <ThirdPartyEmailPasswordAuth>
           <NavBar />
           <div className='w-screen h-screen flex flex-col md:flex-row'>
             <div className='md:w-3/4 h-full flex flex-col'>
@@ -104,10 +108,10 @@ const LearningPage: NextPage = () => {
                 setShowCourseContent={setShowCourseContent}
                 setShowDescription={setShowDescription}
                 setShowNotes={setShowNotes}
-                setShowCreator={setShowCreator}
+                creatorId={creatorId}
               />
             </div>
-            <div className='bg-gray-100 h-4/5 md:h-full w-full md:w-1/4 overflow-auto'>
+            <div className='bg-gray-100 h-4/5 md:h-full w-full md:w-1/3 overflow-auto'>
               {showCourseContent ? (
                 videosData.map((video: SideBarVideoDetails) => {
                   return (
@@ -123,14 +127,12 @@ const LearningPage: NextPage = () => {
                 <Description chosenVideoId={chosenVideoId} />
               ) : showNotes ? (
                 <Notes />
-              ) : showCreator ? (
-                <Creator />
               ) : (
                 <div>No content</div>
               )}
             </div>
           </div>
-        </>
+        </ThirdPartyEmailPasswordAuth>
       );
     }
   }

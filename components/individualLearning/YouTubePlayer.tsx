@@ -1,7 +1,9 @@
 import { useRouter } from 'next/router';
-import { FC } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import YouTube, { YouTubeProps } from 'react-youtube';
+import { useAppDispatch } from '../../hooks/redux';
 import { SideBarVideoDetails } from '../../interfaces/sideBarVideoDetails.interface';
+import { setYouTubePlayerRef } from '../../store/slices/playerRef.slice';
 import axiosInstance from '../../utils/axiosInterceptor';
 
 interface YOutubePlayerProps {
@@ -20,6 +22,8 @@ const YouTubePlayer: FC<YOutubePlayerProps> = ({
   learningClickHandler,
 }) => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+
   const onPlayerReady: YouTubeProps['onReady'] = (event) => {
     event.target.pauseVideo();
     event.target.seekTo(lastSetTimeStamp);
@@ -56,6 +60,14 @@ const YouTubePlayer: FC<YOutubePlayerProps> = ({
     });
   };
 
+  const playerRef = useRef();
+
+  useEffect(() => {
+    if (playerRef.current) {
+      dispatch(setYouTubePlayerRef({ playerRef: playerRef.current }));
+    }
+  }, [playerRef]);
+
   return (
     <YouTube
       className='h-full w-full'
@@ -65,6 +77,7 @@ const YouTubePlayer: FC<YOutubePlayerProps> = ({
       loading={'lazy'}
       onStateChange={onStateChangeHandler}
       onEnd={onEndPlayerHandler}
+      ref={playerRef as any}
     />
   );
 };
