@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import { useAppSelector } from '../../hooks/redux';
 
 interface BottomButtonsCarouselProps {
   setShowCourseContent: Dispatch<SetStateAction<boolean>>;
@@ -17,6 +18,10 @@ const BottomButtonsCarousel: FC<BottomButtonsCarouselProps> = ({
   const [creatorUrl, setCreatorUrl] = useState('');
   const [isLoading, setisLoading] = useState(false);
   const [error, seterror] = useState('');
+
+  const playerRefCurrentVal = useAppSelector(
+    (state) => state.youtubeplayerRef.playerRef
+  );
 
   useEffect(() => {
     const fetchCreatorUrl = async () => {
@@ -64,6 +69,7 @@ const BottomButtonsCarousel: FC<BottomButtonsCarouselProps> = ({
         className='mx-2 bg-red-400 hover:bg-red-500 w-1/5 text-white font-bold py-2 px-4 rounded'
         onClick={() => {
           carouselButtonClickHandler('notes');
+          playerRefCurrentVal.internalPlayer.pauseVideo();
         }}>
         Notes
       </button>

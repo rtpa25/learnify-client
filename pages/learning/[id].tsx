@@ -17,6 +17,7 @@ import {
 } from '../../components/zExporter';
 import { SideBarVideoDetails } from '../../interfaces/sideBarVideoDetails.interface';
 import { ThirdPartyEmailPasswordAuth } from 'supertokens-auth-react/lib/build/recipe/thirdpartyemailpassword';
+import { useAppSelector } from '../../hooks/redux';
 
 const LearningPage: NextPage = () => {
   const [chosenVideoId, setChosenVideoId] = useState('');
@@ -29,8 +30,8 @@ const LearningPage: NextPage = () => {
   const [showCourseContent, setShowCourseContent] = useState(true);
   const [showDescription, setShowDescription] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
-  // const [showCreator, setShowCreator] = useState(false);
   const [creatorId, setCreatorId] = useState('');
+  const currentUser = useAppSelector((state) => state.currentUser.user);
 
   const learningClickHandler = async (video: SideBarVideoDetails) => {
     try {
@@ -111,7 +112,7 @@ const LearningPage: NextPage = () => {
                 creatorId={creatorId}
               />
             </div>
-            <div className='bg-gray-100 h-4/5 md:h-full w-full md:w-1/3 overflow-auto'>
+            <div className='bg-gray-100 h-4/5 md:h-full w-full md:w-1/3 overflow-y-auto overflow'>
               {showCourseContent ? (
                 videosData.map((video: SideBarVideoDetails) => {
                   return (
@@ -126,7 +127,11 @@ const LearningPage: NextPage = () => {
               ) : showDescription ? (
                 <Description chosenVideoId={chosenVideoId} />
               ) : showNotes ? (
-                <Notes />
+                <Notes
+                  userId={currentUser?._id as string}
+                  learningId={learningId}
+                  videoId={chosenVideoId}
+                />
               ) : (
                 <div>No content</div>
               )}
