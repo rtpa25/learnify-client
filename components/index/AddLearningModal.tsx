@@ -15,7 +15,7 @@ import LoadingSpinner from '../UI/LoadingSpinner';
 import MainHeader from '../UI/MainHeader';
 import Modal from '../UI/Modal';
 
-interface AddGroupModalProps {
+interface AddLearningModalProps {
   show: boolean;
   onClose: () => void;
 }
@@ -29,7 +29,7 @@ interface LearningData {
   playlistId: string;
 }
 
-const AddGroupModal: FC<AddGroupModalProps> = ({ show, onClose }) => {
+const AddLearningModal: FC<AddLearningModalProps> = ({ show, onClose }) => {
   const [playListLink, setPlayListLink] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -111,4 +111,4 @@ const AddGroupModal: FC<AddGroupModalProps> = ({ show, onClose }) => {
   );
 };
 
-export default AddGroupModal;
+export default AddLearningModal;

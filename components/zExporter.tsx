@@ -16,3 +16,4 @@ export { default as BottomButtonsCarousel } from './individualLearning/BottomBut
 export { default as Creator } from './individualLearning/Creator';
 export { default as Description } from './individualLearning/Description';
 export { default as Notes } from './individualLearning/Notes';
+export { default as IndividualNote } from './individualLearning/IndividualNote';

@@ -16,8 +16,6 @@ const BottomButtonsCarousel: FC<BottomButtonsCarouselProps> = ({
   creatorId,
 }) => {
   const [creatorUrl, setCreatorUrl] = useState('');
-  const [isLoading, setisLoading] = useState(false);
-  const [error, seterror] = useState('');
 
   const playerRefCurrentVal = useAppSelector(
     (state) => state.youtubeplayerRef.playerRef
@@ -25,7 +23,6 @@ const BottomButtonsCarousel: FC<BottomButtonsCarouselProps> = ({
 
   useEffect(() => {
     const fetchCreatorUrl = async () => {
-      setisLoading(true);
       try {
         const { data } = await axios.get(`
           ${process.env.NEXT_PUBLIC_YT_ENDPOINT}/channels?key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}&part=snippet&id=${creatorId}
@@ -34,9 +31,7 @@ const BottomButtonsCarousel: FC<BottomButtonsCarouselProps> = ({
         setCreatorUrl(`https://www.youtube.com/c/${customUrl}`);
       } catch (error: any) {
         console.error(error);
-        seterror(error.message);
       }
-      setisLoading(false);
     };
     fetchCreatorUrl();
   }, [creatorId]);
@@ -50,34 +45,34 @@ const BottomButtonsCarousel: FC<BottomButtonsCarouselProps> = ({
   };
 
   return (
-    <div className='flex m-4 justify-between'>
+    <div className='flex m-4 justify-between overflow-x-auto overflow-y-hidden md:overflow-hidden'>
       <button
-        className='mx-2 w-1/5 bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded'
+        className='bottom-button'
         onClick={() => {
           carouselButtonClickHandler('content');
         }}>
-        Course content
+        Videos
       </button>
       <button
-        className='mx-2 bg-red-400 w-1/5 hover:bg-red-500 text-white font-bold py-2 px-4 rounded'
+        className='bottom-button'
         onClick={() => {
           carouselButtonClickHandler('desc');
         }}>
         Description
       </button>
       <button
-        className='mx-2 bg-red-400 hover:bg-red-500 w-1/5 text-white font-bold py-2 px-4 rounded'
+        className='bottom-button'
         onClick={() => {
           carouselButtonClickHandler('notes');
           playerRefCurrentVal.internalPlayer.pauseVideo();
         }}>
         Notes
       </button>
-      <button className='mx-2 bg-red-400 hover:bg-red-500 w-1/5 text-white font-bold py-2 px-4 rounded'>
-        <a href={creatorUrl} target='_blank'>
+      <a href={creatorUrl} target='_blank' className='md:w-1/5'>
+        <button className='md:mx-2 bg-red-400 hover:bg-red-500 w-full h-full text-white font-bold md:py-2 md:px-4 rounded p-1'>
           Creator
-        </a>
-      </button>
+        </button>
+      </a>
     </div>
   );
 };

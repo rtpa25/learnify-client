@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import currentUserReducers from './slices/currentUser.slice';
 import currentLearningReducers from './slices/currentLearning.slice';
 import youtubeplayerRefReducers from './slices/playerRef.slice';
+import notesReducers from './slices/notes.slice';
 
 export const store = configureStore({
   reducer: {
     currentUser: currentUserReducers,
     currentLearning: currentLearningReducers,
     youtubeplayerRef: youtubeplayerRefReducers,
+    notes: notesReducers,
   },
 });
 

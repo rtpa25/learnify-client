@@ -36,11 +36,27 @@ const Description: FC<DescriptionProps> = ({ chosenVideoId }) => {
     } else {
       return (
         <div className='p-2'>
-          {description.split('\n').map((item, i) => (
-            <p key={i} className='block m-2'>
-              {item}
-            </p>
-          ))}
+          <h1 className='text-3xl font-semibold m-4 mb-6'>Description</h1>
+          {description.split('\n').map((item, i) => {
+            if (item.includes('https')) {
+              const list = item.split('https');
+
+              return (
+                <p key={i} className='block m-4'>
+                  {list[0]}{' '}
+                  <a href={`https${list[1]}`} className='text-blue-600'>
+                    <span>{'https' + list[1]}</span>
+                  </a>
+                </p>
+              );
+            } else {
+              return (
+                <p key={i} className='block m-2'>
+                  {item}
+                </p>
+              );
+            }
+          })}
         </div>
       );
     }

@@ -13,11 +13,16 @@ import {
   BottomButtonsCarousel,
   Description,
   Notes,
-  Creator,
 } from '../../components/zExporter';
 import { SideBarVideoDetails } from '../../interfaces/sideBarVideoDetails.interface';
 import { ThirdPartyEmailPasswordAuth } from 'supertokens-auth-react/lib/build/recipe/thirdpartyemailpassword';
-import { useAppSelector } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import {
+  doesSessionExist,
+  getUserId,
+} from 'supertokens-auth-react/recipe/session';
+import { User } from '../../interfaces/user.interface';
+import { setCurrentUserData } from '../../store/slices/currentUser.slice';
 
 const LearningPage: NextPage = () => {
   const [chosenVideoId, setChosenVideoId] = useState('');
@@ -32,6 +37,7 @@ const LearningPage: NextPage = () => {
   const [showNotes, setShowNotes] = useState(false);
   const [creatorId, setCreatorId] = useState('');
   const currentUser = useAppSelector((state) => state.currentUser.user);
+  const dispatch = useAppDispatch();
 
   const learningClickHandler = async (video: SideBarVideoDetails) => {
     try {
@@ -86,6 +92,19 @@ const LearningPage: NextPage = () => {
     };
     fetchLearning();
   }, [learningId]);
+
+  useEffect(() => {
+    async function getUserInfo() {
+      if (await doesSessionExist()) {
+        const supertokensId = await getUserId();
+        const { data } = await axiosInstance.get<User>(
+          `/users/me?supertokensId=${supertokensId}`
+        );
+        dispatch(setCurrentUserData({ user: data }));
+      }
+    }
+    getUserInfo();
+  }, []);
 
   if (isLoading) {
     return <Loader />;
