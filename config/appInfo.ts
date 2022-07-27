@@ -1,9 +1,9 @@
-// const __isProd__ = process.env.NODE_ENV === 'production';
+import { __isProd__ } from '../utils/isProd';
 
 export const appInfo = {
   appName: 'learnify',
-  apiDomain: 'http://localhost:8080',
-  websiteDomain: 'http://localhost:3000',
+  apiDomain: __isProd__ ? '' : 'http://localhost:8080',
+  websiteDomain: __isProd__ ? '' : 'http://localhost:3000',
   apiBasePath: '/auth',
   websiteBasePath: '/auth',
 };
