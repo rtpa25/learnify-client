@@ -7,6 +7,9 @@ interface BottomButtonsCarouselProps {
   setShowDescription: Dispatch<SetStateAction<boolean>>;
   setShowNotes: Dispatch<SetStateAction<boolean>>;
   creatorId: string;
+  showDescription: boolean;
+  showCourseContent: boolean;
+  showNotes: boolean;
 }
 
 const BottomButtonsCarousel: FC<BottomButtonsCarouselProps> = ({
@@ -14,6 +17,9 @@ const BottomButtonsCarousel: FC<BottomButtonsCarouselProps> = ({
   setShowDescription,
   setShowNotes,
   creatorId,
+  showDescription,
+  showCourseContent,
+  showNotes,
 }) => {
   const [creatorUrl, setCreatorUrl] = useState('');
 
@@ -47,31 +53,35 @@ const BottomButtonsCarousel: FC<BottomButtonsCarouselProps> = ({
   return (
     <div className='flex m-4 justify-between overflow-x-auto overflow-y-hidden md:overflow-hidden'>
       <button
-        className='bottom-button'
+        className={`font-semibold p-2 ${
+          showCourseContent && 'border-b-4 border-red-500'
+        } `}
         onClick={() => {
           carouselButtonClickHandler('content');
         }}>
         Videos
       </button>
       <button
-        className='bottom-button'
+        className={`font-semibold p-2 ${
+          showDescription && 'border-b-4 border-red-500'
+        } `}
         onClick={() => {
           carouselButtonClickHandler('desc');
         }}>
         Description
       </button>
       <button
-        className='bottom-button'
+        className={`font-semibold p-2 ${
+          showNotes && 'border-b-4 border-red-500'
+        } `}
         onClick={() => {
           carouselButtonClickHandler('notes');
           playerRefCurrentVal.internalPlayer.pauseVideo();
         }}>
         Notes
       </button>
-      <a href={creatorUrl} target='_blank' className='md:w-1/5'>
-        <button className='md:mx-2 bg-red-400 hover:bg-red-500 w-full h-full text-white font-bold md:py-2 md:px-4 rounded p-1'>
-          Creator
-        </button>
+      <a href={creatorUrl} target='_blank'>
+        <button className='p-2 font-semibold'>Creator</button>
       </a>
     </div>
   );

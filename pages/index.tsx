@@ -39,6 +39,7 @@ const Home: NextPage = () => {
         const { data } = await axiosInstance.get<User>(
           `/users/me?supertokensId=${supertokensId}`
         );
+        console.log(data);
         dispatch(setCurrentUserData({ user: data }));
       }
     }

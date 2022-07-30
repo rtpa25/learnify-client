@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .bottom-button {
-    @apply md:mx-2 md:w-1/5 bg-red-400 hover:bg-red-500 text-white font-bold md:py-2 md:px-4 rounded p-1;
-  }
-}
-
 @layer utilities {
   /* Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {

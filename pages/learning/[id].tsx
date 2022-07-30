@@ -129,6 +129,9 @@ const LearningPage: NextPage = () => {
                 setShowDescription={setShowDescription}
                 setShowNotes={setShowNotes}
                 creatorId={creatorId}
+                showDescription={showDescription}
+                showCourseContent={showCourseContent}
+                showNotes={showNotes}
               />
             </div>
             <div className='bg-gray-100 h-4/5 md:h-full w-full md:w-1/3 overflow-y-auto overflow'>
