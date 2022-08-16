@@ -40,13 +40,21 @@ const LearningsContainer: FC = () => {
     if (error) {
       return errorState;
     } else {
-      return (
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-8 my-4'>
-          {learnings.map((learning) => {
-            return <LearningElement key={learning._id} learning={learning} />;
-          })}
-        </div>
-      );
+      if (learnings.length !== 0) {
+        return (
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-8 my-4'>
+            {learnings.map((learning) => {
+              return <LearningElement key={learning._id} learning={learning} />;
+            })}
+          </div>
+        );
+      } else {
+        return (
+          <div className='text-center'>
+            Hit on the plus button to add a learning
+          </div>
+        );
+      }
     }
   }
 };

@@ -92,7 +92,7 @@ const AddLearningModal: FC<AddLearningModalProps> = ({ show, onClose }) => {
           }}
         />
       </div>
-      <MainHeader heading={'Paste Playlist URL'} />
+      <MainHeader heading={'Paste YouTube Playlist URL'} />
       <input
         type='text'
         className='h-8 rounded-md bg-gray-400/50 p-2 my-4 w-full'

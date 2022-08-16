@@ -27,5 +27,4 @@ Use [Learnify](https://learnify.site). for the server side code visit [Learnify-
 - Vercel
 - Railway
 - Docker
-
-
+  
