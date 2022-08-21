@@ -10,7 +10,7 @@ export { default as AddLearningModal } from './index/AddLearningModal';
 export { default as LearningsContainer } from './index/LearningsContainer';
 
 //@learning-page-components
-export { default as SideBarVideoElement } from './individualLearning/SideBarVideElement';
+export { default as SideBarVideoList } from './individualLearning/SideBarVideoList';
 export { default as YouTubePlayer } from './individualLearning/YouTubePlayer';
 export { default as BottomButtonsCarousel } from './individualLearning/BottomButtonsCarousel';
 export { default as Description } from './individualLearning/Description';

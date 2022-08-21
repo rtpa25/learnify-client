@@ -51,7 +51,7 @@ const BottomButtonsCarousel: FC<BottomButtonsCarouselProps> = ({
   };
 
   return (
-    <div className='flex m-4 justify-between overflow-x-auto overflow-y-hidden md:overflow-hidden'>
+    <div className='flex h-fit m-4 justify-between overflow-x-auto overflow-y-hidden md:overflow-hidden'>
       <button
         className={`font-semibold p-2 ${
           showCourseContent && 'border-b-4 border-red-500'

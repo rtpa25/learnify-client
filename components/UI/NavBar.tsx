@@ -18,7 +18,7 @@ const NavBar: FC = () => {
   }
 
   return (
-    <div className='flex justify-between bg-rose-600 text-white py-4 px-8 sticky'>
+    <div className='flex justify-between bg-rose-600 text-white py-4 px-8 z-10 h-fit'>
       <h3
         className='text-xl semi cursor-pointer'
         onClick={() => {
